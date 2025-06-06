@@ -1,0 +1,75 @@
+{% extends 'recipiec/base.html' %}
+{% load recipiec_tags %}
+
+{% block title %}
+    <title>SweetRecipes - {{ recipe.title }}</title>
+{% endblock %}
+
+{% block reg_auth %}
+        <div class="auth-buttons">
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'profile' request.user.pk %}"><button class="btn btn-outline">Профиль</button></a>
+                <a href="{% url 'logout' %}"><button class="btn btn-primary">Выйти</button></a>
+            {% else %}
+                <a href="{% url 'auth' %}"><button class="btn btn-outline">Войти</button></a>
+                <a href="{% url 'reg' %}"><button class="btn btn-primary">Зарегистрироваться</button></a>
+            {% endif %}
+        </div>
+{% endblock %}
+
+{% block sidebar %}
+    <aside class="sidebar">
+        <h3>Категории</h3>
+        {% show_cats %}
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'create_recipe' %}"><button class="btn btn-primary add-recipe-btn">Добавить рецепт</button></a>
+        {% endif %}
+    </aside>
+{% endblock %}
+
+{% block main_content %}
+    <main class="main-content">
+    <section>
+        <h2> {{ recipe.title }} </h2>
+        <br>
+            <img src="{{ recipe.photo.url }}">
+            <p>Время приготовления: {{ recipe.formatted_cooking_time }}</p>
+            <p>Количество просмотров: {{ recipe.count_views }}</p>
+            <br>
+
+            {% if user.is_authenticated %}
+                {% is_favorite recipe user as isfavorite %}
+                {% if not isfavorite %}
+                <form action="{% url 'add_to_favorites' recipe.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Сохранить в избранное</button>
+                </form>
+                {% else %}
+                <form action="{% url 'delete_favorites' recipe.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Удалить из избранного</button>
+                </form>
+                {% endif %}
+            {% else %}
+                <h3>Чтобы сохранить рецепт, войдите или зарегистрируйтесь</h3>
+            {% endif %}
+
+        <div class="ingredients-for-recipe">
+            {% for ing in ingredients %}
+                    {{ ing.title }} - {{ ing.count }} <br>
+            {% endfor %}
+        </div>
+        <div class="recipe-description">
+            {{ recipe.description|linebreaks }}
+        </div>
+        {% if user.is_authenticated %}
+            {% if user.id == recipe.creator.id %}
+                <form action="{% url 'delete_recipe' recipe.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Удалить рецепт</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </section>
+    </main>
+{% endblock %}

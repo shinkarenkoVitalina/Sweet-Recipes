@@ -1,0 +1,30 @@
+{% extends 'recipiec/base.html' %}
+
+{% block title %}
+    <title>SweetRecipes - Регистрация</title>
+{% endblock %}
+
+{% block reg_auth %}
+        <div class="auth-buttons">
+            <a href="{% url 'auth' %}"><button class="btn btn-primary">Войти</button></a>
+        </div>
+{% endblock %}
+
+{% block section %}
+    <section class="hero">
+        <h1>Добро пожаловать в мир сладостей!</h1>
+        <p>На нашем сайте вы найдете лучшие рецепты десертов, тортов, пирожных и других сладких удовольствий. Делитесь своими рецептами и вдохновляйтесь идеями других кулинаров!</p>
+        <br>
+        <div class="user-form-content">
+        <form method="post" class="user-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="reg-form-btn">
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            </div>
+        </form>
+    </div>
+
+    </section>
+{% endblock %}
+

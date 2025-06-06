@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}
+    {% endblock %}
+    <link rel="stylesheet" href="{% static 'recipiec/css/main_page.css' %}">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo"><a class="logo" href="{% url 'main' %}">SweetRecipes</a></div>
+            {% block reg_auth %}
+            {% endblock %}
+        </div>
+    </header>
+
+    <div class="container {% block container_class %}{% endblock %}">
+        {% block section %}
+        {% endblock %}
+
+        {% block sidebar %}
+        {% endblock %}
+
+        {% block main_content %}
+        {% endblock %}
+    </div>
+
+    {% if page_obj %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1" class="pagination-link">&laquo;</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-link">&lt;</a>
+            {% endif %}
+
+            <span class="current">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination-link">&gt;</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-link">&raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% extends 'recipiec/base.html' %}
+{% load recipiec_tags %}
+
+
+
+{% block title %}
+    <title>SweetRecipes - Мои рецепты</title>
+{% endblock %}
+
+{% block container_class %}no-sidebar{% endblock %}
+
+{% block reg_auth %}
+        <h2> Добро пожаловать, {{ request.user.username }}!</h2>
+        <div class="auth-buttons">
+                <a href="{% url 'fav_recipe' request.user.pk %}"><button class="btn btn-outline">Сохраненные рецепты</button></a>
+                <a href="{% url 'logout' %}"><button class="btn btn-primary">Выйти</button></a>
+        </div>
+{% endblock %}
+
+{% block main_content %}
+    <main class="main-content">
+    <section>
+        {% if recipe %}
+        <div class="recipes-grid">
+                <a href="{% url 'create_recipe' %}"><button class="btn btn-primary add-recipe-btn">Добавить рецепт</button></a>
+        </div>
+        <h2 class="section-title">Ваши рецепты</h2>
+        <div class="recipes-grid">
+            {% for rec in recipe %}
+            <article class="recipe-card">
+                <img src="{{ rec.recipe.photo.url }}" alt="{{ rec.recipe.title }}" class="recipe-image">
+                <div class="recipe-info">
+                    <a class="recipe" href="{{ rec.recipe.get_absolute_url }}">
+                    <h3 class="recipe-title">{{ rec.recipe.title }}</h3>
+                    <div class="recipe-meta">
+                        <span> ({{ rec.recipe.count_views }}) </span>
+                        <span> {{ rec.recipe.formatted_cooking_time }} </span>
+                    </div>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+                <h2>Пока вы не добавили ни одного рецепта :(</h2>
+                <br>
+                <div class="recipes-grid">
+                <a href="{% url 'create_recipe' %}"><button class="btn btn-primary add-recipe-btn">Добавить рецепт</button></a>
+                </div>
+        {% endif %}
+    </section>
+    </main>
+{% endblock %}

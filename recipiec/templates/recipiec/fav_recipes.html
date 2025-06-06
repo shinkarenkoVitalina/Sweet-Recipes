@@ -1,0 +1,51 @@
+{% extends 'recipiec/base.html' %}
+{% load recipiec_tags %}
+
+{% block title %}
+    <title>SweetRecipes - Сохраненные рецепты</title>
+{% endblock %}
+
+{% block container_class %}no-sidebar{% endblock %}
+
+{% block reg_auth %}
+        <h2> Добро пожаловать, {{ request.user.username }}!</h2>
+        <div class="auth-buttons">
+                <a href="{% url 'profile' request.user.pk %}"><button class="btn btn-outline">Мои рецепты</button></a>
+                <a href="{% url 'logout' %}"><button class="btn btn-primary">Выйти</button></a>
+        </div>
+{% endblock %}
+
+
+{% block main_content %}
+    {% if recipe %}
+    <main class="main-content">
+    <section>
+        <h2 class="section-title">Сохраненные рецепты</h2>
+        <div class="recipes-grid">
+            {% for rec in recipe %}
+            <article class="recipe-card">
+                <img src="{{ rec.recipe.photo.url }}" alt="{{ rec.recipe.title }}" class="recipe-image">
+                <div class="recipe-info">
+                    <a class="recipe" href="{{ rec.recipe.get_absolute_url }}">
+                    <h3 class="recipe-title">{{ rec.recipe.title }}</h3>
+                    <div class="recipe-meta">
+                        <span> ({{ rec.recipe.count_views }}) </span>
+                        <span> {{ rec.recipe.formatted_cooking_time }} </span>
+                    </div>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    </main>
+    {% else %}
+        <div class="fav-recipes-non-recipes">
+            <h2>Пока вы не сохранили ни одного рецепта</h2>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+
+
